@@ -354,6 +354,22 @@
   }
   .submit-btn:active{ transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink);}
 
+  .retire-btn{
+    display:block;
+    width:100%;
+    max-width:340px;
+    margin:16px auto 0;
+    padding:10px;
+    font-size:13px;
+    font-weight:700;
+    color:#888;
+    background:transparent;
+    border:2px dashed #ccc;
+    border-radius:12px;
+    cursor:pointer;
+  }
+  .retire-btn:active{ background:#f5f5f5; }
+
   /* --- result screen --- */
   .result-score{
     text-align:center;
@@ -552,6 +568,7 @@
         <button class="key-btn key-go" data-key="go">決定</button>
       </div>
     </div>
+    <button class="retire-btn" id="retire-btn">✕ リタイアする</button>
   </div>
 
   <!-- ============ RESULT SCREEN ============ -->
@@ -747,6 +764,7 @@ let state = {
   op: null,
   grade: null,
   total: null,
+  selectedTotal: null,
   timeLimit: null,
   current: 0,
   correctCount: 0,
@@ -809,7 +827,7 @@ qcountButtons.forEach(btn=>{
   btn.addEventListener('click', ()=>{
     qcountButtons.forEach(b=>b.classList.remove('selected'));
     btn.classList.add('selected');
-    state.total = parseInt(btn.dataset.n, 10);
+    state.selectedTotal = parseInt(btn.dataset.n, 10);
     checkReady();
   });
 });
@@ -825,7 +843,7 @@ timeButtons.forEach(btn=>{
 });
 
 function checkReady(){
-  startBtn.disabled = !(state.op && state.grade && state.total && state.timeLimit);
+  startBtn.disabled = !(state.op && state.grade && state.selectedTotal && state.timeLimit);
 }
 
 startBtn.addEventListener('click', startQuiz);
@@ -877,9 +895,7 @@ function startQuiz(){
   state.score = 0;
   state.mistakes = [];
   state.history = [];
-  if(state.isReviewMode){
-    state.total = state.reviewQueue.length;
-  }
+  state.total = state.isReviewMode ? state.reviewQueue.length : state.selectedTotal;
   showScreen('quiz');
   startBGM('quiz');
   buildDots(state.total);
@@ -1264,6 +1280,19 @@ document.getElementById('ranking-clear-btn').addEventListener('click', ()=>{
     try{ localStorage.removeItem(RANKING_KEY); } catch(e){}
     renderRankingList();
   }
+});document.getElementById('retire-btn').addEventListener('click', ()=>{
+  if(!confirm('ここで やめますか？\nここまでの きろくは ほぞんされます。')) return;
+  stopTimer();
+  setKeypadEnabled(false);
+  const answered = state.history.length;
+  if(answered === 0){
+    state.isReviewMode = false;
+    startBGM('setup');
+    showScreen('setup');
+    return;
+  }
+  state.total = answered;
+  finishQuiz();
 });
 </script>
 </body>
