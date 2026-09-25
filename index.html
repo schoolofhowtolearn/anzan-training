@@ -246,7 +246,6 @@
     text-align:center;
     padding:34px 16px;
     position:relative;
-    overflow:hidden;
   }
   .question{
     font-size:60px;
@@ -272,7 +271,7 @@
     grid-template-columns:1fr 1fr 1fr;
     gap:10px;
     max-width:340px;
-    margin:20px auto 0;
+    margin:12px auto 0;
   }
   .key-btn{
     padding:22px 0;
@@ -553,20 +552,20 @@
       <div class="bonus-flash" id="bonus-flash"></div>
       <div class="question" id="question-text">3 + 4 =</div>
       <input type="text" inputmode="none" readonly class="answer-input" id="answer-input" autocomplete="off">
-      <div class="keypad" id="keypad">
-        <button class="key-btn" data-key="1">1</button>
-        <button class="key-btn" data-key="2">2</button>
-        <button class="key-btn" data-key="3">3</button>
-        <button class="key-btn" data-key="4">4</button>
-        <button class="key-btn" data-key="5">5</button>
-        <button class="key-btn" data-key="6">6</button>
-        <button class="key-btn" data-key="7">7</button>
-        <button class="key-btn" data-key="8">8</button>
-        <button class="key-btn" data-key="9">9</button>
-        <button class="key-btn key-del" data-key="del">⌫</button>
-        <button class="key-btn" data-key="0">0</button>
-        <button class="key-btn key-go" data-key="go">決定</button>
-      </div>
+    </div>
+    <div class="keypad" id="keypad">
+      <button class="key-btn" data-key="1">1</button>
+      <button class="key-btn" data-key="2">2</button>
+      <button class="key-btn" data-key="3">3</button>
+      <button class="key-btn" data-key="4">4</button>
+      <button class="key-btn" data-key="5">5</button>
+      <button class="key-btn" data-key="6">6</button>
+      <button class="key-btn" data-key="7">7</button>
+      <button class="key-btn" data-key="8">8</button>
+      <button class="key-btn" data-key="9">9</button>
+      <button class="key-btn key-del" data-key="del">⌫</button>
+      <button class="key-btn" data-key="0">0</button>
+      <button class="key-btn key-go" data-key="go">決定</button>
     </div>
     <button class="retire-btn" id="retire-btn">✕ リタイアする</button>
   </div>
@@ -1041,7 +1040,7 @@ function handleTimeout(){
   setKeypadEnabled(false);
   setTimeout(()=>{
     nextQuestion();
-  }, 650);
+  }, 400);
 }
 
 function submitAnswer(){
@@ -1088,7 +1087,7 @@ function submitAnswer(){
   setKeypadEnabled(false);
   setTimeout(()=>{
     nextQuestion();
-  }, 650);
+  }, 400);
 }
 
 function flashFeedback(kind){
