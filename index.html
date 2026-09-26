@@ -956,19 +956,58 @@ function setKeypadEnabled(enabled){
   keyButtons.forEach(b=> b.disabled = !enabled);
 }
 
+// キーパッドの入力処理（共通）
+function handleKeyInput(key){
+  if(key === 'del'){
+    answerInput.value = answerInput.value.slice(0, -1);
+  } else if(key === 'go'){
+    submitAnswer();
+  } else {
+    if(answerInput.value.length < MAX_DIGITS){
+      answerInput.value += key;
+    }
+  }
+}
+
 keyButtons.forEach(btn=>{
   btn.addEventListener('click', ()=>{
     const key = btn.dataset.key;
-    if(key === 'del'){
-      answerInput.value = answerInput.value.slice(0, -1);
-    } else if(key === 'go'){
-      submitAnswer();
-    } else {
-      if(answerInput.value.length < MAX_DIGITS){
-        answerInput.value += key;
-      }
-    }
+    handleKeyInput(key);
   });
+});
+
+// PC用キーボード入力（テンキー・数字キー・Backspace・Enter）
+document.addEventListener('keydown', (e)=>{
+  // クイズ画面がアクティブかつキーパッドが有効なときだけ反応
+  if(!screens.quiz || !screens.quiz.classList.contains('active')) return;
+  if(keyButtons[0].disabled) return;  // キーパッド無効中は無視
+
+  // マイナス記号（負の数の答え対応）
+  if(e.key === '-' && answerInput.value === ''){
+    answerInput.value = '-';
+    sfxClick();
+    return;
+  }
+  // 数字（メインキー・テンキー）
+  if(/^[0-9]$/.test(e.key)){
+    e.preventDefault();
+    sfxClick();
+    handleKeyInput(e.key);
+    return;
+  }
+  // バックスペース → 消去
+  if(e.key === 'Backspace'){
+    e.preventDefault();
+    sfxClick();
+    handleKeyInput('del');
+    return;
+  }
+  // Enter → 決定
+  if(e.key === 'Enter'){
+    e.preventDefault();
+    handleKeyInput('go');
+    return;
+  }
 });
 
 let timerInterval = null;
